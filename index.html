@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>НОКРИДА — контекст и таргет для дилеров, застройщиков и сложных ниш</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg-main: #f4f6fb;
+      --bg-card: #ffffff;
+      --accent: #0b2a55;
+      --accent-soft: #e0ebff;
+      --accent-secondary: #22c55e;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border-soft: #e5e7eb;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.08);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --transition-fast: 0.2s ease;
+    }
+
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      background:radial-gradient(circle at top left,#e0f2fe 0,#f4f6fb 40%,#eef2ff 100%);
+      color:var(--text-main);
+      line-height:1.5;
+    }
+    a { color:inherit; text-decoration:none; }
+
+    .page { min-height:100vh; display:flex; flex-direction:column; }
+    .container {
+      max-width:1120px;
+      margin:0 auto;
+      padding:16px 16px 64px;
+      width:100%;
+    }
+
+    header { padding:8px 0; }
+    .header-inner {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      flex-wrap:wrap;
+      margin-bottom:8px;
+    }
+    .logo { display:flex; align-items:center; gap:10px; }
+    .logo-img {
+      height:32px;
+      width:auto;
+      display:block;
+    }
+    .logo-text-sub {
+      font-size:14px;
+      font-weight:500;
+      color:var(--text-muted);
+    }
+    .header-cta {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:13px;
+      flex-wrap:wrap;
+    }
+    .header-phone { color:var(--text-muted); white-space:nowrap; }
+
+    .header-nav {
+      display:flex;
+      gap:14px;
+      font-size:13px;
+      flex-wrap:wrap;
+      margin-top:4px;
+    }
+    .nav-link {
+      color:var(--text-muted);
+      padding:4px 0;
+      border-bottom:2px solid transparent;
+      transition:border-color var(--transition-fast), color var(--transition-fast);
+    }
+    .nav-link:hover {
+      color:var(--accent);
+      border-bottom-color:var(--accent-soft);
+    }
+    .nav-link--active {
+      color:var(--accent);
+      border-bottom-color:var(--accent);
+      font-weight:600;
+    }
+
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 18px; border-radius:999px; border:none;
+      cursor:pointer; font-size:14px; font-weight:600;
+      white-space:nowrap;
+      transition:transform var(--transition-fast),
+                 box-shadow var(--transition-fast),
+                 background var(--transition-fast),
+                 color var(--transition-fast);
+    }
+    .btn-primary {
+      background:linear-gradient(135deg,#0b2a55,#a855f7);
+      color:#fff;
+      box-shadow:0 14px 35px rgba(168,85,247,0.45);
+    }
+    .btn-primary:hover {
+      transform:translateY(-1px);
+      box-shadow:0 18px 45px rgba(168,85,247,0.6);
+    }
+    .btn-outline {
+      background:transparent; color:var(--accent);
+      border:1px solid var(--accent-soft);
+    }
+    .btn-outline:hover { background:rgba(37,99,235,0.04); }
+
+    main { flex:1 0 auto; }
+    section { margin-top:32px; }
+
+    /* HERO с панелью */
+    .hero {
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+      gap:32px; align-items:center;
+      margin-top:8px;
+    }
+    .hero-title {
+      font-size:30px; line-height:1.15; margin-bottom:14px;
+    }
+    @media (min-width:900px) {
+      .hero-title { font-size:36px; }
+    }
+    .hero-sub {
+      font-size:15px; color:var(--text-muted);
+      margin-bottom:20px; max-width:520px;
+    }
+    .hero-buttons {
+      display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px;
+    }
+    .hero-badges {
+      display:flex; flex-wrap:wrap; gap:8px; font-size:12px; color:var(--text-muted);
+    }
+    .badge {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px; border-radius:999px;
+      background:rgba(255,255,255,0.8);
+      border:1px solid rgba(148,163,184,0.5);
+      backdrop-filter:blur(8px);
+    }
+    .badge-dot {
+      width:6px; height:6px; border-radius:999px;
+      background:var(--accent-secondary);
+    }
+
+    .hero-right {
+      position: relative;
+      border-radius: 24px;
+      padding: 12px;
+      background: url('hero-bg.jpg') no-repeat center/cover;
+    }
+    .dashboard {
+      background:rgba(15,23,42,0.9);
+      border-radius:24px;
+      padding:18px 18px 20px;
+      color:#e5e7eb;
+      box-shadow:var(--shadow-soft);
+      border:1px solid rgba(148,163,184,0.4);
+      backdrop-filter: blur(6px);
+    }
+    .dash-header {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:10px; font-size:12px;
+    }
+    .dash-title { font-weight:600; }
+    .dash-pills { display:flex; gap:6px; }
+    .dash-pill {
+      padding:3px 8px; border-radius:999px;
+      font-size:11px; background:rgba(37,99,235,0.7);
+    }
+    .dash-metrics {
+      display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px; font-size:11px; margin-bottom:10px;
+    }
+    .dash-metric {
+      background:radial-gradient(circle at top left,
+                                 rgba(37,99,235,0.3),
+                                 rgba(15,23,42,1));
+      border-radius:14px; padding:7px 9px;
+      border:1px solid rgba(55,65,81,0.8);
+    }
+    .dash-metric-label { color:#9ca3af; margin-bottom:2px; }
+    .dash-metric-value { font-weight:600; font-size:13px; }
+    .dash-metric-note { color:#6ee7b7; font-size:10px; margin-top:2px; }
+    .dash-graph {
+      margin-top:4px; padding-top:6px;
+      border-top:1px dashed rgba(55,65,81,0.7);
+      display:flex; align-items:flex-end; gap:4px; height:70px;
+    }
+    .dash-bar {
+      flex:1 1 auto; border-radius:999px;
+      background:linear-gradient(to top,#2563eb,#a855f7);
+      opacity:.75;
+    }
+    .dash-bar--low { height:26%; }
+    .dash-bar--mid { height:50%; }
+    .dash-bar--high { height:82%; }
+    .dash-footer {
+      margin-top:8px; display:flex; justify-content:space-between;
+      align-items:center; font-size:11px; color:#9ca3af;
+    }
+    .dash-status {
+      display:inline-flex; align-items:center; gap:6px;
+      padding:4px 9px; border-radius:999px;
+      background:rgba(22,163,74,0.15);
+      color:#bbf7d0;
+      border:1px solid rgba(22,163,74,0.5);
+    }
+
+    .section-title {
+      font-size:22px; margin-bottom:8px;
+    }
+    .section-sub {
+      font-size:14px; color:var(--text-muted);
+      margin-bottom:18px; max-width:640px;
+    }
+
+    .grid-3 {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:18px;
+    }
+    .grid-2 {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+    }
+    .card {
+      background:var(--bg-card);
+      border-radius:var(--radius-lg);
+      padding:16px 16px 14px;
+      border:1px solid var(--border-soft);
+      box-shadow:0 10px 25px rgba(15,23,42,0.04);
+    }
+    .card h3 { font-size:16px; margin-bottom:6px; }
+    .card p { font-size:13px; color:var(--text-muted); }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 8px;
+      object-fit: contain;
+    }
+    .card-image {
+      width: 100%;
+      border-radius: 12px;
+      margin: 6px 0 8px;
+      object-fit: cover;
+      max-height: 160px;
+    }
+
+    .list { list-style:none; margin-top:6px; font-size:13px; color:var(--text-muted); }
+    .list li { display:flex; gap:6px; margin-bottom:4px; }
+    .list-bullet {
+      margin-top:7px; width:6px; height:6px;
+      border-radius:999px; background:var(--accent);
+      flex-shrink:0;
+    }
+
+    .steps {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+    .step {
+      background:var(--bg-card);
+      border-radius:var(--radius-md);
+      padding:12px 10px 10px;
+      border:1px solid var(--border-soft);
+    }
+    .step-number {
+      width:20px; height:20px; border-radius:999px;
+      display:inline-flex; align-items:center; justify-content:center;
+      background:var(--accent-soft); color:var(--accent);
+      font-size:12px; font-weight:600; margin-bottom:4px;
+    }
+    .step-title { font-size:14px; margin-bottom:2px; }
+    .step p { font-size:13px; color:var(--text-muted); }
+
+    .faq {
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1.1fr);
+      gap:20px;
+    }
+    .faq-item { margin-bottom:10px; }
+    .faq-q { font-size:14px; font-weight:600; margin-bottom:2px; }
+    .faq-a { font-size:13px; color:var(--text-muted); }
+
+    .final-cta {
+      background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(79,70,229,.16));
+      border-radius:20px;
+      padding:20px 18px 16px;
+      border:1px solid rgba(129,140,248,0.4);
+      box-shadow:0 18px 38px rgba(129,140,248,0.18);
+      margin-top:40px;
+    }
+    .final-grid {
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+      gap:18px; align-items:flex-start;
+    }
+    .final-title { font-size:20px; margin-bottom:6px; }
+    .final-sub { font-size:14px; color:#111827; max-width:520px; }
+
+    .final-icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 10px;
+    }
+
+    .form {
+      background:rgba(255,255,255,.96);
+      border-radius:16px;
+      padding:12px 12px 10px;
+      border:1px solid rgba(209,213,219,0.9);
+    }
+    .form-row {
+      display:flex; gap:8px; margin-bottom:8px; flex-wrap:wrap;
+    }
+    .field {
+      flex:1 1 130px;
+      display:flex; flex-direction:column; gap:3px;
+      font-size:12px;
+    }
+    .field label { color:var(--text-muted); }
+    .field input, .field textarea {
+      border-radius:10px;
+      border:1px solid #d1d5db;
+      padding:7px 9px;
+      font-size:13px; font-family:inherit;
+      outline:none;
+      transition:border-color var(--transition-fast),
+               box-shadow var(--transition-fast);
+    }
+    .field input:focus, .field textarea:focus {
+      border-color:#2563eb;
+      box-shadow:0 0 0 1px rgba(37,99,235,.3);
+    }
+    .field textarea { min-height:50px; resize:vertical; }
+
+    .form-extra {
+      margin-top:4px; display:flex; justify-content:space-between;
+      align-items:flex-start; gap:8px; flex-wrap:wrap;
+      font-size:11px; color:var(--text-muted);
+    }
+    .checkbox-row {
+      display:flex; align-items:center; gap:6px; max-width:240px;
+    }
+    .checkbox-row input { width:14px; height:14px; }
+
+    footer {
+      margin-top:24px; padding:14px 16px 10px;
+      font-size:11px; color:var(--text-muted);
+      border-top:1px solid rgba(209,213,219,0.8);
+    }
+    .footer-inner {
+      max-width:1120px; margin:0 auto;
+      display:flex; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
+    }
+
+    @media(max-width:900px){
+      .hero { grid-template-columns:minmax(0,1fr); }
+      .hero-right { order:-1; }
+      .grid-3 { grid-template-columns:minmax(0,1fr); }
+      .grid-2 { grid-template-columns:minmax(0,1fr); }
+      .steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .faq { grid-template-columns:minmax(0,1fr); }
+      .final-grid { grid-template-columns:minmax(0,1fr); }
+    }
+    @media(max-width:640px){
+      .container { padding:16px 14px 40px; }
+      .hero-buttons { flex-direction:column; }
+      .btn { width:100%; justify-content:center; }
+      .steps { grid-template-columns:minmax(0,1fr); }
+      .form-row { flex-direction:column; }
+      .header-cta { width:100%; justify-content:flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <div>
+          <div class="logo">
+            <img src="nokryda-logo.png" alt="НОКРИДА" class="logo-img">
+            <div class="logo-text-sub">Рекламное агентство</div>
+          </div>
+          <nav class="header-nav">
+            <a href="index.html" class="nav-link nav-link--active">Главная</a>
+            <a href="yandex-direct.html" class="nav-link">Яндекс Директ</a>
+            <a href="vk-ads.html" class="nav-link">VK Реклама</a>
+            <a href="yandex-maps.html" class="nav-link">Яндекс Карты</a>
+            <a href="2gis.html" class="nav-link">2ГИС</a>
+          </nav>
+        </div>
+        <div class="header-cta">
+          <div class="header-phone">+7 (000) 000‑00‑00</div>
+          <button class="btn btn-outline">Запросить аудит</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <!-- HERO -->
+      <section class="hero">
+        <div>
+          <h1 class="hero-title">Превращаем рекламу в прогнозируемый поток заявок</h1>
+          <p class="hero-sub">
+            Контекст и таргет для дилеров и застройщиков
+            с понятной ценой лида и простыми отчётами для директора по продажам.
+          </p>
+          <div class="hero-buttons">
+            <button class="btn btn-primary">Получить медиаплан и прогноз заявок</button>
+            <button class="btn btn-outline">Бесплатный аудит рекламы</button>
+          </div>
+          <div class="hero-badges">
+            <div class="badge">
+              <span class="badge-dot"></span><span>Первые заявки через 7–14 дней</span>
+            </div>
+            <div class="badge">
+              <span class="badge-dot"></span><span>Отчёт: заявки, визиты, продажи</span>
+            </div>
+            <div class="badge">
+              <span class="badge-dot"></span><span>Честный аудит за 1 день</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="dashboard">
+            <div class="dash-header">
+              <div class="dash-title">Сводка по заявкам</div>
+              <div class="dash-pills">
+                <div class="dash-pill">Автодилер</div>
+                <div class="dash-pill" style="background:rgba(22,163,74,.7)">Застройщик</div>
+              </div>
+            </div>
+            <div class="dash-metrics">
+              <div class="dash-metric">
+                <div class="dash-metric-label">Лиды / месяц</div>
+                <div class="dash-metric-value">+64%</div>
+                <div class="dash-metric-note">Рост за 3 месяца</div>
+              </div>
+              <div class="dash-metric">
+                <div class="dash-metric-label">Лид по ЖК</div>
+                <div class="dash-metric-value">1 800 ₽</div>
+                <div class="dash-metric-note">Комфорт / бизнес</div>
+              </div>
+              <div class="dash-metric">
+                <div class="dash-metric-label">Тест‑драйв</div>
+                <div class="dash-metric-value">700 ₽</div>
+                <div class="dash-metric-note">Заявка в салон</div>
+              </div>
+            </div>
+            <div class="dash-graph">
+              <div class="dash-bar dash-bar--mid"></div>
+              <div class="dash-bar dash-bar--low"></div>
+              <div class="dash-bar dash-bar--high"></div>
+              <div class="dash-bar dash-bar--mid"></div>
+              <div class="dash-bar dash-bar--high"></div>
+              <div class="dash-bar dash-bar--low"></div>
+              <div class="dash-bar dash-bar--high"></div>
+            </div>
+            <div class="dash-footer">
+              <div class="dash-status">● Система стабильных заявок</div>
+              <div>Контекст · Таргет · Ретаргетинг</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Кому полезны -->
+      <section>
+        <h2 class="section-title">Кому мы особенно полезны</h2>
+        <p class="section-sub">
+          Фокус на рынках, где важна не просто заявка, а реальная продажа.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <img src="icon-auto.png" alt="Автодилеры" class="card-icon">
+            <h3>Официальные дилеры и автоцентры</h3>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Заявки на тест‑драйв и визит в салон.</span></li>
+              <li><span class="list-bullet"></span><span>Отдельные кампании по моделям и кредиту.</span></li>
+              <li><span class="list-bullet"></span><span>Передаём лиды сразу в CRM.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <img src="icon-building.png" alt="Застройщики" class="card-icon">
+            <h3>Застройщики и девелоперы</h3>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Лиды на конкретные ЖК и очереди.</span></li>
+              <li><span class="list-bullet"></span><span>Отдельно ипотека, рассрочка, спецусловия.</span></li>
+              <li><span class="list-bullet"></span><span>Считаем стоимость брони, а не только лида.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <img src="icon-b2c.png" alt="B2C‑сервисы" class="card-icon">
+            <h3>Сложные B2C‑сервисы и товары</h3>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Длинный цикл сделки и несколько касаний.</span></li>
+              <li><span class="list-bullet"></span><span>Сквозная аналитика до продажи.</span></li>
+              <li><span class="list-bullet"></span><span>Работаем в связке с отделом продаж.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- В чём отличаемся -->
+      <section>
+        <h2 class="section-title">В чём мы отличаемся от “мы покрутим рекламу”</h2>
+        <p class="section-sub">
+          У нас главный отчёт — не по CTR, а по деньгам: заявки, визиты, сделки и ROMI.
+        </p>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Считаем юнит‑экономику, а не клики</h3>
+            <p>
+              Сначала считаем, сколько вы можете платить за лид и сделку,
+              исходя из маржи и конверсий. Не запускаем заведомо убыточные сценарии.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Отчёты, понятные директору по продажам</h3>
+            <p>
+              В отчётах — заявки, визиты, сделки и ROMI. Никаких отчётов
+              «про показы и CTR» без привязки к деньгам и плану продаж.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Все каналы в одной картине</h3>
+            <p>
+              Контекст, таргет, ретаргетинг, бренд — смотрим в связке.
+              Видно, что отключать, что усиливать и как это влияет на продажи.
+            </p>
+          </div>
+          <div class="card">
+            <h3>План гипотез с датами и ответственностью</h3>
+            <p>
+              Каждый месяц — список конкретных гипотез и сроки, когда покажем результат.
+              Никакого «давайте ещё покрутим неделю и посмотрим».
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Услуги -->
+      <section>
+        <h2 class="section-title">Из чего собираем систему трафика</h2>
+        <p class="section-sub">
+          Модули, из которых мы собираем решение под ваш рынок и текущую ситуацию.
+        </p>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Контекстная реклама</h3>
+            <p>Яндекс и Google для авто, недвижимости и сложных ниш.</p>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Поиск, РСЯ/КМС, бренд‑кампании и спецпредложения.</span></li>
+              <li><span class="list-bullet"></span><span>Сегментация по моделям, ЖК, офферам и этапам воронки.</span></li>
+              <li><span class="list-bullet"></span><span>Оптимизация по стоимости лида и реальной сделке.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Таргетированная реклама</h3>
+            <p>VK, myTarget и другие площадки.</p>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Лид‑формы, квизы, ретаргетинг и догрев аудиторий.</span></li>
+              <li><span class="list-bullet"></span><span>Работа с «брошенными» заявками и посещениями.</span></li>
+              <li><span class="list-bullet"></span><span>Look‑alike по лучшим клиентам и событиям в CRM.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Аудит действующей рекламы</h3>
+            <p>Точка входа, если текущие подрядчики не дали результата.</p>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Разбор аккаунтов и кампаний всех предыдущих агентств.</span></li>
+              <li><span class="list-bullet"></span><span>Список конкретных правок и прогноз по лидам и экономии.</span></li>
+              <li><span class="list-bullet"></span><span>Чёткое понимание: что можно улучшить, а что нет.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Аналитика и отчётность</h3>
+            <p>Сквозная аналитика от клика до сделки по факту.</p>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Метрика, GA, коллтрекинг, CRM.</span></li>
+              <li><span class="list-bullet"></span><span>Отчёты для собственника, маркетинга и отдела продаж.</span></li>
+              <li><span class="list-bullet"></span><span>Регулярные созвоны по цифрам и плану гипотез.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Кейсы -->
+      <section>
+        <h2 class="section-title">Коротко о результатах</h2>
+        <p class="section-sub">
+          Ориентиры по цифрам для авто, недвижимости и сложных B2C‑проектов.
+        </p>
+        <div class="grid-3">
+          <div class="card">
+            <h3>Дилерский центр (регион)</h3>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Бюджет: от 300 000 ₽/мес.</span></li>
+              <li><span class="list-bullet"></span><span>Заявка на тест‑драйв: от 700 ₽.</span></li>
+              <li><span class="list-bullet"></span><span>Визит в салон: от 2 500 ₽.</span></li>
+              <li><span class="list-bullet"></span><span>+65% лидов при том же бюджете за 3 месяца.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Застройщик (ЖК)</h3>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Бюджет: от 500 000 ₽/мес.</span></li>
+              <li><span class="list-bullet"></span><span>Лид: от 1 800 ₽.</span></li>
+              <li><span class="list-bullet"></span><span>2–3% лидов переходят в бронь.</span></li>
+              <li><span class="list-bullet"></span><span>−27% к стоимости лида за счёт перераспределения каналов.</span></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Сложный B2C‑сервис</h3>
+            <ul class="list">
+              <li><span class="list-bullet"></span><span>Бюджет: от 200 000 ₽/мес.</span></li>
+              <li><span class="list-bullet"></span><span>−25–35% к стоимости лида за 2–3 месяца.</span></li>
+              <li><span class="list-bullet"></span><span>Переход от «качелей» к стабильному плану заявок.</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Как работаем -->
+      <section>
+        <h2 class="section-title">Как работаем со сложными проектами</h2>
+        <p class="section-sub">
+          Пошаговый процесс, понятный собственнику и директору по продажам.
+        </p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-title">Аудит и бриф (1–3 дня)</div>
+            <p>Смотрим текущую рекламу, сайт и воронку. Формируем картину, что уже делалось.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-title">Прогноз и медиаплан</div>
+            <p>Считаем юнит‑экономику, даём прогноз по лидам и стоимости для разных сценариев.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-title">Тест 14–30 дней</div>
+            <p>Запускаем кампании, отключаем то, что не даёт заявок, усиливаем рабочие связки.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-title">Масштабирование</div>
+            <p>Масштабируем эффективные каналы и гипотезы, подключаем дополнительные инструменты.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Почему нас выбирают -->
+      <section>
+        <h2 class="section-title">Почему к нам приходят «после других»</h2>
+        <div class="faq">
+          <div>
+            <div class="card">
+              <h3>Опыт в авто, недвижимости и сложных нишах</h3>
+              <p>
+                Понимаем специфику сделок, сезонность и KPI отделов продаж.
+                Привязываем рекламу к реальной воронке и вашим бизнес‑показателям.
+              </p>
+            </div>
+            <div class="card" style="margin-top:8px;">
+              <h3>Работаем по договору и KPI</h3>
+              <p>
+                Фиксируем зоны ответственности, формат отчётности и целевые показатели
+                до старта. Прозрачно показываем, что даёт реклама в деньгах.
+              </p>
+            </div>
+          </div>
+          <div>
+            <div class="faq-item">
+              <div class="faq-q">С какими бюджетами вы работаете?</div>
+              <div class="faq-a">
+                Обычно от 150–200 тыс. ₽ в месяц на рекламу. Возможен пилотный
+                проект для проверки гипотез — особенно если до этого реклама «не летела».
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Можно ли начать только с аудита?</div>
+              <div class="faq-a">
+                Да. Часто приходят именно так: делаем аудит после 1–2 подрядчиков,
+                даём список правок и честный прогноз по лидам и окупаемости.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Когда будут первые результаты?</div>
+              <div class="faq-a">
+                Первые заявки обычно появляются в течение 1–2 недель после запуска.
+                Для стабильной статистики и масштабирования требуется 1–2 месяца.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Финальный оффер -->
+      <section class="final-cta" id="form">
+        <div class="final-grid">
+          <div>
+            <img src="cta-analytics.svg" alt="Аналитика и медиаплан" class="final-icon">
+            <h2 class="final-title">Есть сложный проект или реклама, которая «не работает»?</h2>
+            <p class="final-sub">
+              Оставьте контакты — подготовим аудит и медиаплан за 3–5 дней.
+              Покажем, можно ли проект вытянуть, и сколько должен стоить лид,
+              чтобы это было выгодно.
+            </p>
+          </div>
+          <div>
+            <form class="form">
+              <div class="form-row">
+                <div class="field">
+                  <label for="name">Имя</label>
+                  <input id="name" type="text" placeholder="Как к вам обращаться?" />
+                </div>
+                <div class="field">
+                  <label for="phone">Телефон</label>
+                  <input id="phone" type="tel" placeholder="+7 (___) ___‑__‑__" />
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="field">
+                  <label for="email">E‑mail</label>
+                  <input id="email" type="email" placeholder="name@company.ru" />
+                </div>
+                <div class="field">
+                  <label for="company">Компания / сайт</label>
+                  <input id="company" type="text" placeholder="Дилерский центр / ЖК / проект" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="comment">Что за проект и что уже пробовали?</label>
+                <textarea id="comment" placeholder="Кратко: ниша, бюджеты, что делали вы и подрядчики"></textarea>
+              </div>
+              <div class="form-extra">
+                <label class="checkbox-row">
+                  <input type="checkbox" />
+                  <span>У меня уже есть действующая реклама, нужен аудит</span>
+                </label>
+                <button type="submit" class="btn btn-primary">
+                  Получить аудит и медиаплан
+                </button>
+              </div>
+              <div style="margin-top:4px;font-size:10px;color:#9ca3af;">
+                Отправляя форму, вы соглашаетесь с политикой конфиденциальности
+                и обработкой персональных данных.
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>© 2025 НОКРИДА. Все права защищены.</div>
+      <div>Политика конфиденциальности • Договор оферты</div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
